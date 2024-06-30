@@ -1,6 +1,14 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Container, Table, TableBody, TableContainer, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Table,
+  TableBody,
+  TableContainer,
+  Typography,
+} from '@mui/material';
 // components
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store/store';
@@ -26,6 +34,7 @@ const TABLE_HEAD = [
   { id: 'language', label: 'Language', align: 'left' },
   { id: 'image', label: 'Image', align: 'left' },
   { id: 'audio', label: 'Audio', align: 'left' },
+  { id: 'action', label: 'Action', align: 'left' },
 ];
 
 export default function PageOne() {
@@ -68,9 +77,12 @@ export default function PageOne() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Typography variant="h3" component="h1" paragraph>
-          Flash card
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h3" component="h1" paragraph>
+            Flash card
+          </Typography>
+          <Button variant="outlined">Add Flash Card</Button>
+        </Box>
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           {/* <TableSelectedAction

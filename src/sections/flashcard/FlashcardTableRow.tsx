@@ -100,6 +100,15 @@ export default function FlashCardTableRow({
           )}
         </TableCell>
 
+        <TableCell align="left">
+          <Button variant="outlined" onClick={() => {}}>
+            Edit
+          </Button>
+          <Button sx={{ ml: 1 }} variant="outlined" onClick={() => {}}>
+            Delete
+          </Button>
+        </TableCell>
+
         {/* <TableCell align="left">
           {6}
           <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
