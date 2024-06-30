@@ -22,11 +22,13 @@ function jwtDecode(token: string) {
 // ----------------------------------------------------------------------
 
 export const isValidToken = (accessToken: string) => {
+  console.log('accesstoken', accessToken);
   if (!accessToken) {
     return false;
   }
 
   const decoded = jwtDecode(accessToken);
+  console.log('accesstoken', decoded);
 
   const currentTime = Date.now() / 1000;
 

@@ -1,10 +1,10 @@
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
 // utils
-import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
 import { ActionMapType, AuthStateType, AuthUserType, JWTContextType } from './types';
+import axiosInstance from '../utils/axios';
 
 // ----------------------------------------------------------------------
 
@@ -96,18 +96,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const accessToken = storageAvailable ? localStorage.getItem('accessToken') : '';
 
-      if (accessToken && isValidToken(accessToken)) {
+      if (accessToken) {
         setSession(accessToken);
 
-        const response = await axios.get('/api/account/my-account');
+        const response = await axiosInstance.get('/users/getuser');
 
-        const { user } = response.data;
+        // const { user } = response.data;
 
         dispatch({
           type: Types.INITIAL,
           payload: {
             isAuthenticated: true,
-            user,
+            user: response?.data?.data,
           },
         });
       } else {
@@ -137,12 +137,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // LOGIN
   const login = useCallback(async (phone: string, password: string) => {
-    const response = await axios.post('/users/login', {
+    const response = await axiosInstance.post('/users/login', {
       phone,
       password,
     });
-    console.log("data", response?.data?.data)
-    const { token, user } = response.data.data;
+    console.log('data', response?.data?.data);
+    const { token, user } = response?.data?.data;
 
     setSession(token);
 
@@ -157,7 +157,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   // REGISTER
   const register = useCallback(
     async (email: string, password: string, firstName: string, lastName: string) => {
-      const response = await axios.post('/api/account/register', {
+      const response = await axiosInstance.post('/api/account/register', {
         email,
         password,
         firstName,

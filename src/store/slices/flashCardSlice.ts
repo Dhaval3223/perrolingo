@@ -1,5 +1,4 @@
 import axiosInstance from 'src/utils/axios';
-import { AppThunk } from '../store';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface FlashCardState {
@@ -34,8 +33,8 @@ export const { startLoading, flashCardData, stopLoading } = flashCardSlice.actio
 export default flashCardSlice.reducer;
 
 export const getAllFlashCardForAdmin =
-  (page: number, pageSize: number): AppThunk<void> =>
-  async (dispatch) => {
+  (page: number, pageSize: number): any =>
+  async (dispatch: any) => {
     try {
       dispatch(startLoading());
       const response = await axiosInstance.get(
