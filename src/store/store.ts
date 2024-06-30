@@ -1,5 +1,5 @@
-import flashCardReducer from './slices/flashCardSlice';
 import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit';
+import flashCardReducer from './slices/flashCardSlice';
 
 // Configure Redux store with combined reducers
 const store = configureStore({
