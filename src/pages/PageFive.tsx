@@ -12,7 +12,7 @@ export default function PageFive() {
   return (
     <>
       <Helmet>
-        <title> Page Five | Perrolingo Admin Panel</title>
+        <title> Page Five | Minimal UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>

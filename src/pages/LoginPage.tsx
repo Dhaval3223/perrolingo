@@ -8,7 +8,7 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Login | Perrolingo Admin Panel</title>
+        <title> Login | Minimal UI</title>
       </Helmet>
 
       <Login />

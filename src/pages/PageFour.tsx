@@ -12,7 +12,7 @@ export default function PageFour() {
   return (
     <>
       <Helmet>
-        <title> Page Four | Perrolingo Admin Panel</title>
+        <title> Page Four | Minimal UI</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
