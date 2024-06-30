@@ -1,6 +1,14 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Container, Table, TableBody, TableContainer, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Table,
+  TableBody,
+  TableContainer,
+  Typography,
+} from '@mui/material';
 // components
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store/store';
@@ -14,6 +22,7 @@ import {
   emptyRows,
   useTable,
 } from 'src/components/table';
+import FlashCardTableRow from 'src/sections/flashcard/FlashcardTableRow';
 import { useSettingsContext } from '../components/settings';
 
 // ----------------------------------------------------------------------
@@ -23,8 +32,9 @@ const TABLE_HEAD = [
   { id: 'definition', label: 'Definition', align: 'left' },
   { id: 'phrase', label: 'Phrase', align: 'left' },
   { id: 'language', label: 'Language', align: 'left' },
-  { id: 'language', label: 'Language', align: 'left' },
+  { id: 'image', label: 'Image', align: 'left' },
   { id: 'audio', label: 'Audio', align: 'left' },
+  { id: 'action', label: 'Action', align: 'left' },
 ];
 
 export default function PageOne() {
@@ -57,20 +67,24 @@ export default function PageOne() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const isNotFound = flashCardData?.data?.length === 0;
 
   return (
     <>
       <Helmet>
-        <title> Page One | Minimal UI</title>
+        <title> Flash card | Perrolingo Admin Panel</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Typography variant="h3" component="h1" paragraph>
-          Page One
-        </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h3" component="h1" paragraph>
+            Flash card
+          </Typography>
+          <Button variant="outlined">Add Flash Card</Button>
+        </Box>
 
-        {/* <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          {/* <TableSelectedAction
             dense={dense}
             numSelected={selected.length}
             rowCount={tableData.length}
@@ -87,7 +101,7 @@ export default function PageOne() {
                 </IconButton>
               </Tooltip>
             }
-          />
+          /> */}
 
           <Scrollbar>
             <Table size="medium" sx={{ minWidth: 800 }}>
@@ -95,39 +109,39 @@ export default function PageOne() {
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={data?.length}
+                rowCount={flashCardData?.length}
                 numSelected={selected.length}
                 onSort={onSort}
-                onSelectAllRows={(checked) =>
-                  onSelectAllRows(
-                    checked,
-                    tableData.map((row) => row.id)
-                  )
-                }
+                // onSelectAllRows={(checked) =>
+                //   onSelectAllRows(
+                //     checked,
+                //     tableData.map((row) => row.id)
+                //   )
+                // }
               />
 
               <TableBody>
-                {data.map((row) => (
-                  <UserTableRow
+                {flashCardData?.data?.map((row: any) => (
+                  <FlashCardTableRow
                     key={row.id}
                     row={row}
-                    selected={selected.includes(row.id)}
+                    selected={selected?.includes(row.id)}
                     onSelectRow={() => onSelectRow(row.id)}
-                    onDeleteRow={() => handleDeleteRow(row.id)}
-                    onEditRow={() => handleEditRow(row.name)}
+                    onDeleteRow={() => {}}
+                    onEditRow={() => {}}
                   />
                 ))}
 
                 <TableEmptyRows
                   height={72}
-                  emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, flashCardData?.data?.length)}
                 />
 
                 <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
-        </TableContainer> */}
+        </TableContainer>
       </Container>
     </>
   );

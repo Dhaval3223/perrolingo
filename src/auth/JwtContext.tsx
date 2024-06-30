@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
 // utils
 import localStorageAvailable from '../utils/localStorageAvailable';
