@@ -59,7 +59,7 @@ export default function PageOne() {
 
   const { themeStretch } = useSettingsContext();
 
-  const { data, loading } = useSelector((state: RootState) => state.flashCard);
+  const { flashCardData, flashCardDataloading } = useSelector((state: RootState) => state.flashCard);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -67,8 +67,7 @@ export default function PageOne() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log('data', data, loading);
-  const isNotFound = data?.data?.length === 0;
+  const isNotFound = flashCardData?.data?.length === 0;
 
   return (
     <>
@@ -110,7 +109,7 @@ export default function PageOne() {
                 order={order}
                 orderBy={orderBy}
                 headLabel={TABLE_HEAD}
-                rowCount={data?.length}
+                rowCount={flashCardData?.length}
                 numSelected={selected.length}
                 onSort={onSort}
                 // onSelectAllRows={(checked) =>
@@ -122,11 +121,11 @@ export default function PageOne() {
               />
 
               <TableBody>
-                {data?.data?.map((row: any) => (
+                {flashCardData?.data?.map((row: any) => (
                   <FlashCardTableRow
                     key={row.id}
                     row={row}
-                    selected={selected.includes(row.id)}
+                    selected={selected?.includes(row.id)}
                     onSelectRow={() => onSelectRow(row.id)}
                     onDeleteRow={() => {}}
                     onEditRow={() => {}}
@@ -135,7 +134,7 @@ export default function PageOne() {
 
                 <TableEmptyRows
                   height={72}
-                  emptyRows={emptyRows(page, rowsPerPage, data?.data?.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, flashCardData?.data?.length)}
                 />
 
                 <TableNoData isNotFound={isNotFound} />
