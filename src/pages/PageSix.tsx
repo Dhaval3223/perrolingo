@@ -12,7 +12,7 @@ export default function PageSix() {
   return (
     <>
       <Helmet>
-        <title> Page Six | Minimal UI</title>
+        <title> Page Six | Perrolingo Admin Panel</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>

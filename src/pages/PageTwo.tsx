@@ -12,7 +12,7 @@ export default function PageTwo() {
   return (
     <>
       <Helmet>
-        <title> Page Two | Minimal UI</title>
+        <title> Page Two | Perrolingo Admin Panel</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>

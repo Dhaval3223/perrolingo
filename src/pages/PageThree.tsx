@@ -12,7 +12,7 @@ export default function PageThree() {
   return (
     <>
       <Helmet>
-        <title> Page Three | Minimal UI</title>
+        <title> Page Three | Perrolingo Admin Panel</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>

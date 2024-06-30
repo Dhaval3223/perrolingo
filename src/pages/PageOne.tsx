@@ -14,6 +14,7 @@ import {
   emptyRows,
   useTable,
 } from 'src/components/table';
+import FlashCardTableRow from 'src/sections/flashcard/FlashcardTableRow';
 import { useSettingsContext } from '../components/settings';
 
 // ----------------------------------------------------------------------
@@ -23,7 +24,7 @@ const TABLE_HEAD = [
   { id: 'definition', label: 'Definition', align: 'left' },
   { id: 'phrase', label: 'Phrase', align: 'left' },
   { id: 'language', label: 'Language', align: 'left' },
-  { id: 'language', label: 'Language', align: 'left' },
+  { id: 'image', label: 'Image', align: 'left' },
   { id: 'audio', label: 'Audio', align: 'left' },
 ];
 
@@ -58,20 +59,21 @@ export default function PageOne() {
   }, []);
 
   console.log('data', data, loading);
+  const isNotFound = data?.data?.length === 0;
 
   return (
     <>
       <Helmet>
-        <title> Page One | Minimal UI</title>
+        <title> Flash card | Perrolingo Admin Panel</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h3" component="h1" paragraph>
-          Page One
+          Flash card
         </Typography>
 
-        {/* <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          <TableSelectedAction
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          {/* <TableSelectedAction
             dense={dense}
             numSelected={selected.length}
             rowCount={tableData.length}
@@ -88,7 +90,7 @@ export default function PageOne() {
                 </IconButton>
               </Tooltip>
             }
-          />
+          /> */}
 
           <Scrollbar>
             <Table size="medium" sx={{ minWidth: 800 }}>
@@ -99,36 +101,36 @@ export default function PageOne() {
                 rowCount={data?.length}
                 numSelected={selected.length}
                 onSort={onSort}
-                onSelectAllRows={(checked) =>
-                  onSelectAllRows(
-                    checked,
-                    tableData.map((row) => row.id)
-                  )
-                }
+                // onSelectAllRows={(checked) =>
+                //   onSelectAllRows(
+                //     checked,
+                //     tableData.map((row) => row.id)
+                //   )
+                // }
               />
 
               <TableBody>
-                {data.map((row) => (
-                  <UserTableRow
+                {data?.data?.map((row: any) => (
+                  <FlashCardTableRow
                     key={row.id}
                     row={row}
                     selected={selected.includes(row.id)}
                     onSelectRow={() => onSelectRow(row.id)}
-                    onDeleteRow={() => handleDeleteRow(row.id)}
-                    onEditRow={() => handleEditRow(row.name)}
+                    onDeleteRow={() => {}}
+                    onEditRow={() => {}}
                   />
                 ))}
 
                 <TableEmptyRows
                   height={72}
-                  emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, data?.data?.length)}
                 />
 
                 <TableNoData isNotFound={isNotFound} />
               </TableBody>
             </Table>
           </Scrollbar>
-        </TableContainer> */}
+        </TableContainer>
       </Container>
     </>
   );
