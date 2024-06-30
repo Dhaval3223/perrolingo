@@ -49,7 +49,7 @@ export default function PageOne() {
 
   const { themeStretch } = useSettingsContext();
 
-  const { data, loading } = useSelector((state: RootState) => state.flashCard);
+  const { flashCardData, flashCardDataloading } = useSelector((state: RootState) => state.flashCard);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -57,7 +57,6 @@ export default function PageOne() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log('data', data, loading);
 
   return (
     <>
