@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import useAudio from 'src/hooks/useAudio';
 import useSound from 'use-sound';
+import Iconify from 'src/components/iconify/Iconify';
+import MenuPopover from 'src/components/menu-popover/MenuPopover';
 
 // @types
 // import { IUserAccountGeneral } from '../../../../@types/user';
@@ -32,10 +34,12 @@ export default function FlashCardTableRow({
   onSelectRow,
   onDeleteRow,
 }: any) {
-  console.log('row', row);
   const { term, definition, phrase, language, audio, image } = row || {};
   const [isPlaying, setIsPlaying] = useState(false);
   const [playSound, { stop }] = useSound(audio);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
+  console.log('row', row);
 
   const handlePlay = () => {
     setIsPlaying(true);
@@ -46,10 +50,6 @@ export default function FlashCardTableRow({
     setIsPlaying(false);
     stop();
   };
-
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -100,7 +100,7 @@ export default function FlashCardTableRow({
           )}
         </TableCell>
 
-        <TableCell align="left">
+        {/* <TableCell align="left">
           <Button variant="outlined" onClick={() => {}}>
             Edit
           </Button>
@@ -108,32 +108,20 @@ export default function FlashCardTableRow({
             Delete
           </Button>
         </TableCell>
-
-        {/* <TableCell align="left">
-          {6}
+ */}
+        <TableCell align="left">
           <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell> */}
+        </TableCell>
       </TableRow>
-      {/* 
+
       <MenuPopover
         open={openPopover}
         onClose={handleClosePopover}
         arrow="right-top"
         sx={{ width: 140 }}
       >
-        <MenuItem
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" />
-          Delete
-        </MenuItem>
-
         <MenuItem
           onClick={() => {
             onEditRow();
@@ -143,9 +131,20 @@ export default function FlashCardTableRow({
           <Iconify icon="eva:edit-fill" />
           Edit
         </MenuItem>
+        <MenuItem
+          onClick={() => {
+            onDeleteRow();
+            // handleOpenConfirm();
+            // handleClosePopover();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon="eva:trash-2-outline" />
+          Delete
+        </MenuItem>
       </MenuPopover>
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"

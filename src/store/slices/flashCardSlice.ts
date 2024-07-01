@@ -1,8 +1,10 @@
 import axiosInstance from 'src/utils/axios';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
 interface FlashCardState {
-  flashCardData: any;
+  flashCardData: {
+    count: number;
+    rows: any;
+  };
   flashCardDataloading: boolean;
   createFlashDataSuccess: boolean;
   createFlashDataError: boolean;
@@ -20,7 +22,10 @@ interface FlashCardState {
 }
 
 const initialState: FlashCardState = {
-  flashCardData: [],
+  flashCardData: {
+    count: 0,
+    rows: [],
+  },
   flashCardDataloading: false,
   createFlashDataError: false,
   createFlashDataSuccess: false,
@@ -117,7 +122,7 @@ export const getAllFlashCardForAdmin =
       const response = await axiosInstance.get(
         `/flashcard/getallflashcardsforadmin?page=${page}&pageSize=${pageSize}`
       ); // Replace with your API endpoint
-      dispatch(flashCardData(response.data));
+      dispatch(flashCardData(response.data.data));
     } catch (error) {
       dispatch(stopFlashCardDataLoading(error.message));
     }
@@ -128,12 +133,9 @@ export const createFlashCardForAdmin =
   async (dispatch: any) => {
     try {
       dispatch(createFlashDataLoading());
-      const response = await axiosInstance.post(`/flashcard`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }); // Replace with your API endpoint
+      await axiosInstance.post(`/flashcard`, data); // Replace with your API endpoint
       dispatch(createFlashCardDataSuccess());
+      dispatch(getAllFlashCardForAdmin(1, 10));
     } catch (error) {
       dispatch(createFlashCardDataError());
     }
@@ -144,12 +146,9 @@ export const updateFlashCardForAdmin =
   async (dispatch: any) => {
     try {
       dispatch(updateFlashDataLoading());
-      const response = await axiosInstance.patch(`/flashcard/${id}`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }); // Replace with your API endpoint
+      await axiosInstance.patch(`/flashcard/${id}`, data); // Replace with your API endpoint
       dispatch(updateFlashCardDataSuccess());
+      dispatch(getAllFlashCardForAdmin(1, 10));
     } catch (error) {
       dispatch(updateFlashCardDataError());
     }
@@ -160,8 +159,9 @@ export const deleteFlashCardForAdmin =
   async (dispatch: any) => {
     try {
       dispatch(deleteFlashDataLoading());
-      const response = await axiosInstance.patch(`/flashcard/delete/${id}`); // Replace with your API endpoint
+      await axiosInstance.patch(`/flashcard/delete/${id}`); // Replace with your API endpoint
       dispatch(deleteFlashCardDataSuccess());
+      dispatch(getAllFlashCardForAdmin(1, 10));
     } catch (error) {
       dispatch(deleteFlashCardDataError());
     }

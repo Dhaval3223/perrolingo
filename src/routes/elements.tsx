@@ -15,7 +15,7 @@ const Loadable = (Component: ElementType) => (props: any) =>
 
 export const LoginPage = Loadable(lazy(() => import('../pages/LoginPage')));
 
-export const PageOne = Loadable(lazy(() => import('../pages/PageOne')));
+export const FlashCard = Loadable(lazy(() => import('../pages/FlashCard')));
 export const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));
 export const PageThree = Loadable(lazy(() => import('../pages/PageThree')));
 export const PageFour = Loadable(lazy(() => import('../pages/PageFour')));
