@@ -10,7 +10,7 @@ import { PATH_AFTER_LOGIN } from '../config-global';
 //
 import {
   Page404,
-  PageOne,
+  FlashCard,
   PageTwo,
   PageSix,
   PageFour,
@@ -46,8 +46,8 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'flash-card', element: <PageOne /> },
-        { path: 'one', element: <PageOne /> },
+        { path: 'flash-card', element: <FlashCard /> },
+        { path: 'one', element: <FlashCard /> },
         { path: 'two', element: <PageTwo /> },
         { path: 'three', element: <PageThree /> },
         {
