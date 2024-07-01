@@ -59,7 +59,9 @@ export default function PageOne() {
 
   const { themeStretch } = useSettingsContext();
 
-  const { flashCardData, flashCardDataloading } = useSelector((state: RootState) => state.flashCard);
+  const { flashCardData, flashCardDataloading } = useSelector(
+    (state: RootState) => state.flashCard
+  );
 
   const dispatch = useDispatch();
   useEffect(() => {
