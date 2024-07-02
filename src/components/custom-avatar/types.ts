@@ -1,5 +1,5 @@
 // @mui
-import { BadgeProps, AvatarProps, AvatarGroupProps } from '@mui/material';
+import { BadgeProps, AvatarProps } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
