@@ -1,7 +1,5 @@
 // @mui
-import { Alert, Tooltip, Stack, Typography, Link, Box } from '@mui/material';
-// auth
-import { useAuthContext } from '../../auth/useAuthContext';
+import { Stack, Typography } from '@mui/material';
 // layouts
 import LoginLayout from '../../layouts/login';
 //
@@ -9,8 +7,6 @@ import AuthLoginForm from './AuthLoginForm';
 // ----------------------------------------------------------------------
 
 export default function Login() {
-  const { method } = useAuthContext();
-
   return (
     <LoginLayout>
       <Stack spacing={2} sx={{ mb: 3, position: 'relative' }}>

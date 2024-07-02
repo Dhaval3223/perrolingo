@@ -3,7 +3,7 @@ import { createContext, useEffect, useReducer, useCallback, useMemo } from 'reac
 // utils
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
-import { isValidToken, setSession } from './utils';
+import { setSession } from './utils';
 import { ActionMapType, AuthStateType, AuthUserType, JWTContextType } from './types';
 import axiosInstance from '../utils/axios';
 
@@ -99,10 +99,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (accessToken) {
         setSession(accessToken);
-
         const response = await axiosInstance.get('/users/getuser');
-
-        // const { user } = response.data;
 
         dispatch({
           type: Types.INITIAL,
@@ -142,7 +139,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       phone,
       password,
     });
-    console.log('data', response?.data?.data);
     const { token, user } = response?.data?.data;
 
     setSession(token);

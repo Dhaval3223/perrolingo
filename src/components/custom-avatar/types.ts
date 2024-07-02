@@ -8,8 +8,3 @@ export interface CustomAvatarProps extends AvatarProps {
   name?: string;
   BadgeProps?: BadgeProps;
 }
-
-export interface CustomAvatarGroupProps extends AvatarGroupProps {
-  size?: 'tiny' | 'small' | 'medium' | 'large';
-  compact?: boolean;
-}
