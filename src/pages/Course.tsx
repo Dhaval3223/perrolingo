@@ -14,7 +14,6 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store/store';
 import { useEffect, useState } from 'react';
-import Scrollbar from 'src/components/scrollbar/Scrollbar';
 import {
   TableEmptyRows,
   TableHeadCustom,
@@ -23,7 +22,13 @@ import {
   emptyRows,
   useTable,
 } from 'src/components/table';
-import { deleteCourse, getAllCourseWithFlashcard } from 'src/store/slices/courseSlice';
+import {
+  clearCreateCourseData,
+  clearDeleteCourseData,
+  clearUpdateCourseData,
+  deleteCourse,
+  getAllCourseWithFlashcard,
+} from 'src/store/slices/courseSlice';
 import CourseTableRow from 'src/sections/course/CourseTableRow';
 import CourseModel from 'src/sections/course/CourseModel';
 import { useSnackbar } from '../components/snackbar';
@@ -44,7 +49,6 @@ export default function Course() {
   const [selectedRow, setSelectedRow] = useState({});
   const [id, setId] = useState(-1);
   const {
-    dense,
     page,
     order,
     orderBy,
@@ -58,15 +62,61 @@ export default function Course() {
 
   const { themeStretch } = useSettingsContext();
 
-  const { courseWithFlashcardData, courseWithFlashcardDataLoading } = useSelector(
-    (state: RootState) => state.course
-  );
+  const {
+    courseWithFlashcardData,
+    courseWithFlashcardDataLoading,
+    createCourseError,
+    createCourseSuccess,
+    deleteCourseSuccess,
+    deleteCourseError,
+    updateCourseError,
+    updateCourseSuccess,
+  } = useSelector((state: RootState) => state.course);
 
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllCourseWithFlashcard(page + 1, rowsPerPage));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (deleteCourseSuccess) {
+      enqueueSnackbar('Course deleted successfully', {
+        variant: 'success',
+      });
+      dispatch(clearDeleteCourseData());
+    }
+    if (deleteCourseError || updateCourseError || createCourseError) {
+      enqueueSnackbar('Something went wrong', {
+        variant: 'error',
+      });
+      if (createCourseError) dispatch(clearCreateCourseData());
+      if (deleteCourseError) dispatch(clearDeleteCourseData());
+      if (updateCourseError) dispatch(clearUpdateCourseData());
+    }
+    if (createCourseSuccess) {
+      enqueueSnackbar('Course created successfully', {
+        variant: 'success',
+      });
+      dispatch(clearCreateCourseData());
+    }
+    if (updateCourseSuccess) {
+      enqueueSnackbar('Course updated successfully', {
+        variant: 'success',
+      });
+      dispatch(clearUpdateCourseData());
+    }
+    setPage(0);
+    handleClose();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    createCourseSuccess,
+    createCourseError,
+    deleteCourseError,
+    deleteCourseSuccess,
+    updateCourseError,
+    updateCourseSuccess,
+  ]);
 
   const isNotFound = courseWithFlashcardData?.rows?.length === 0;
 
@@ -86,7 +136,6 @@ export default function Course() {
   };
   const onDeleteRow = (rowId: number) => {
     dispatch(deleteCourse(rowId));
-    enqueueSnackbar('Course deleted successfully');
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -121,25 +170,6 @@ export default function Course() {
         </Box>
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          {/* <TableSelectedAction
-            dense={dense}
-            numSelected={selected.length}
-            rowCount={tableData.length}
-            onSelectAllRows={(checked) =>
-              onSelectAllRows(
-                checked,
-                tableData.map((row) => row.id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={handleOpenConfirm}>
-                  <Iconify icon="eva:trash-2-outline" />
-                </IconButton>
-              </Tooltip>
-            }
-          /> */}
-
           <Table size="medium" sx={{ minWidth: 800 }}>
             <TableHeadCustom
               order={order}
@@ -148,12 +178,6 @@ export default function Course() {
               rowCount={courseWithFlashcardData?.rows?.length}
               numSelected={selected.length}
               onSort={onSort}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row) => row.id)
-              //   )
-              // }
             />
 
             <TableBody>

@@ -14,7 +14,13 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store/store';
 import { useEffect, useState } from 'react';
-import { deleteFlashCardForAdmin, getAllFlashCardForAdmin } from 'src/store/slices/flashCardSlice';
+import {
+  clearCreateFlashCardData,
+  clearDeleteFlashCardData,
+  clearUpdateFlashCardData,
+  deleteFlashCardForAdmin,
+  getAllFlashCardForAdmin,
+} from 'src/store/slices/flashCardSlice';
 import {
   TableEmptyRows,
   TableHeadCustom,
@@ -58,9 +64,16 @@ export default function FlashCard() {
 
   const { themeStretch } = useSettingsContext();
 
-  const { flashCardData, flashCardDataloading } = useSelector(
-    (state: RootState) => state.flashCard
-  );
+  const {
+    flashCardData,
+    flashCardDataloading,
+    deleteFlashDataError,
+    deleteFlashDataSuccess,
+    updateFlashDataError,
+    updateFlashDataSuccess,
+    createFlashDataError,
+    createFlashDataSuccess,
+  } = useSelector((state: RootState) => state.flashCard);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAllFlashCardForAdmin(page + 1, rowsPerPage));
@@ -85,7 +98,6 @@ export default function FlashCard() {
   };
   const onDeleteRow = (rowId: number) => {
     dispatch(deleteFlashCardForAdmin(rowId));
-    enqueueSnackbar('Flashcard deleted successfully');
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -98,6 +110,42 @@ export default function FlashCard() {
     dispatch(getAllFlashCardForAdmin(page + 1, parseInt(event.target.value, 10)));
   };
 
+  useEffect(() => {
+    if (deleteFlashDataSuccess) {
+      enqueueSnackbar('Flashcard deleted successfully', { variant: 'success' });
+      dispatch(clearDeleteFlashCardData());
+    }
+    if (deleteFlashDataError || updateFlashDataError || createFlashDataError) {
+      enqueueSnackbar('Something went wrong', {
+        variant: 'error',
+      });
+      if (deleteFlashDataError) dispatch(clearDeleteFlashCardData());
+      if (updateFlashDataError) dispatch(clearUpdateFlashCardData());
+      if (createFlashDataError) dispatch(clearCreateFlashCardData());
+    }
+    if (updateFlashDataSuccess) {
+      enqueueSnackbar('FlashCard updated successfully', {
+        variant: 'success',
+      });
+      dispatch(clearUpdateFlashCardData());
+    }
+    if (createFlashDataSuccess) {
+      enqueueSnackbar('FlashCard created successfully', {
+        variant: 'success',
+      });
+      dispatch(clearCreateFlashCardData());
+    }
+    handleClose();
+    setPage(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    deleteFlashDataSuccess,
+    deleteFlashDataError,
+    updateFlashDataError,
+    updateFlashDataSuccess,
+    createFlashDataError,
+    createFlashDataSuccess,
+  ]);
   return (
     <>
       <Helmet>
@@ -120,25 +168,6 @@ export default function FlashCard() {
         </Box>
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          {/* <TableSelectedAction
-            dense={dense}
-            numSelected={selected.length}
-            rowCount={tableData.length}
-            onSelectAllRows={(checked) =>
-              onSelectAllRows(
-                checked,
-                tableData.map((row) => row.id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={handleOpenConfirm}>
-                  <Iconify icon="eva:trash-2-outline" />
-                </IconButton>
-              </Tooltip>
-            }
-          /> */}
-
           <Table size="medium" sx={{ minWidth: 800 }}>
             <TableHeadCustom
               order={order}
@@ -147,12 +176,6 @@ export default function FlashCard() {
               rowCount={flashCardData?.rows?.length}
               numSelected={selected.length}
               onSort={onSort}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row) => row.id)
-              //   )
-              // }
             />
 
             <TableBody>

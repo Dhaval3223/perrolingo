@@ -103,6 +103,11 @@ const userSlice = createSlice({
       state.deleteUserError = true;
       state.deleteUserLoading = false;
     },
+    clearDeleteUserData(state) {
+      state.deleteFlashCardLoading = false;
+      state.deleteFlashCardError = false;
+      state.deleteFlashCardSuccess = false;
+    },
     deleteFlashCardByIdLoading(state) {
       state.deleteFlashCardLoading = true;
     },
@@ -136,6 +141,7 @@ export const {
   deleteFlashCardByIdError,
   deleteFlashCardByIdLoading,
   deleteFlashCardByIdSuccess,
+  clearDeleteUserData,
 } = userSlice.actions;
 
 export default userSlice.reducer;
@@ -169,7 +175,7 @@ export const updateFlashCardById =
   async (dispatch: any) => {
     try {
       dispatch(updateFlashcardByIdLoading());
-      const response = await axiosInstance.patch(`/flashcard/updateflashcardbyid/${id}`, data, {
+      await axiosInstance.patch(`/flashcard/updateflashcardbyid/${id}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -197,7 +203,7 @@ export const deleteUser =
   async (dispatch: any) => {
     try {
       dispatch(deleteUserLoading());
-      const response = await axiosInstance.patch(`/admins/deleteuser/${id}`); // Replace with your API endpoint
+      await axiosInstance.patch(`/admins/deleteuser/${id}`); // Replace with your API endpoint
       dispatch(deleteUserSuccess());
       dispatch(getAllUsers(1, 5));
     } catch (error) {
@@ -210,7 +216,7 @@ export const deleteFlashCardById =
   async (dispatch: any) => {
     try {
       dispatch(deleteFlashCardByIdLoading());
-      const response = await axiosInstance.patch(`/flashcard/deleteflashcardbyid/${id}`); // Replace with your API endpoint
+      await axiosInstance.patch(`/flashcard/deleteflashcardbyid/${id}`); // Replace with your API endpoint
       dispatch(deleteFlashCardByIdSuccess());
     } catch (error) {
       dispatch(deleteFlashCardByIdError());

@@ -18,6 +18,7 @@ export const PATH_DASHBOARD = {
   flashCard: path(ROOTS_DASHBOARD, '/flash-card'),
   course: path(ROOTS_DASHBOARD, '/course'),
   users: path(ROOTS_DASHBOARD, '/users'),
+  proposedCard: path(ROOTS_DASHBOARD, '/proposed-card'),
   two: path(ROOTS_DASHBOARD, '/two'),
   three: path(ROOTS_DASHBOARD, '/three'),
   user: {

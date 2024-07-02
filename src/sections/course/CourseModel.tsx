@@ -21,8 +21,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllFlashCardForAdmin } from 'src/store/slices/flashCardSlice';
 import { createCourse, updateCourse } from 'src/store/slices/courseSlice';
 import { RootState } from 'src/store/store';
-import { useSnackbar } from '../../components/snackbar';
-
+import { LoadingButton } from '@mui/lab';
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
@@ -52,7 +51,9 @@ const FormSchema = Yup.object().shape({
 
 export default function CourseModel({ open, selectedRow = {}, editId = -1, onClose }: Props) {
   const { flashCardData } = useSelector((state: RootState) => state.flashCard);
-  const { enqueueSnackbar } = useSnackbar();
+  const { createCourseLoading, updateCourseLoading } = useSelector(
+    (state: RootState) => state.course
+  );
   const dispatch = useDispatch();
   const [url, setUrl] = useState<any>('');
   const defaultValues = {
@@ -70,7 +71,6 @@ export default function CourseModel({ open, selectedRow = {}, editId = -1, onClo
 
   const {
     reset,
-    control,
     setValue,
     handleSubmit,
     formState: { dirtyFields },
@@ -102,7 +102,6 @@ export default function CourseModel({ open, selectedRow = {}, editId = -1, onClo
         formData.append('subscription_type', data?.subscription_type);
       }
       dispatch(updateCourse(formData, editId));
-      enqueueSnackbar('Course updated successfully', { variant: 'success' });
     } else {
       formData.append('name', data.name);
       formData.append('level', data.level);
@@ -111,9 +110,7 @@ export default function CourseModel({ open, selectedRow = {}, editId = -1, onClo
       formData.append('flash_card_array', JSON.stringify(data?.flash_card_array));
       formData.append('subscription_type', data?.subscription_type);
       dispatch(createCourse(formData));
-      enqueueSnackbar('Course created successfully', { variant: 'success' });
     }
-    onClose();
   };
 
   const handleDrop = useCallback(
@@ -153,6 +150,7 @@ export default function CourseModel({ open, selectedRow = {}, editId = -1, onClo
       };
       reset(data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRow]);
 
   useEffect(() => {
@@ -275,9 +273,18 @@ export default function CourseModel({ open, selectedRow = {}, editId = -1, onClo
                 <Button onClick={onClose} color="inherit">
                   Cancel
                 </Button>
-                <Button variant="contained" type="submit">
-                  Save
-                </Button>
+                <LoadingButton
+                  type="submit"
+                  loading={
+                    Object.keys(selectedRow)?.length > 0 ? updateCourseLoading : createCourseLoading
+                  }
+                  loadingPosition="start"
+                  variant="contained"
+                >
+                  {updateCourseLoading === false && createCourseLoading === false && (
+                    <span>Save</span>
+                  )}
+                </LoadingButton>
               </Box>
             </Grid>
           </Grid>

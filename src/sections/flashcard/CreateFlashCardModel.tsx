@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogProps,
   Box,
-  Stack,
   IconButton,
   Grid,
   Typography,
@@ -20,10 +19,10 @@ import * as Yup from 'yup';
 import { RHFUpload } from 'src/components/hook-form/RHFUpload';
 import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import Iconify from 'src/components/iconify/Iconify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createFlashCardForAdmin, updateFlashCardForAdmin } from 'src/store/slices/flashCardSlice';
-import { useSnackbar } from '../../components/snackbar';
-
+import { LoadingButton } from '@mui/lab';
+import { RootState } from 'src/store/store';
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
@@ -63,8 +62,10 @@ export default function CreateFlashCardModel({
   editId = -1,
   onClose,
 }: Props) {
-  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const { createFlashDataLoading, updateFlashDataLoading } = useSelector(
+    (state: RootState) => state.flashCard
+  );
   const [url, setUrl] = useState<any>('');
   const defaultValues = {
     term: '',
@@ -89,7 +90,7 @@ export default function CreateFlashCardModel({
     control,
     setValue,
     handleSubmit,
-    formState: { isDirty, dirtyFields },
+    formState: { dirtyFields },
   } = methods;
 
   const simpleWordsArr = useFieldArray({
@@ -130,7 +131,6 @@ export default function CreateFlashCardModel({
         });
       }
       dispatch(updateFlashCardForAdmin(formData, editId));
-      enqueueSnackbar('Flashcard updated successfully', { variant: 'success' });
     } else {
       formData.append('term', data.term);
       formData.append('definition', data.definition);
@@ -145,10 +145,7 @@ export default function CreateFlashCardModel({
         });
       }
       dispatch(createFlashCardForAdmin(formData));
-      enqueueSnackbar('Flashcard created successfully', { variant: 'success' });
     }
-
-    onClose();
   };
 
   const handleDrop = useCallback(
@@ -172,7 +169,7 @@ export default function CreateFlashCardModel({
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      const newFile = Object.assign(file, {
+      Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
 
@@ -205,6 +202,7 @@ export default function CreateFlashCardModel({
       };
       reset(data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRow]);
 
   return (
@@ -334,9 +332,20 @@ export default function CreateFlashCardModel({
                 <Button onClick={onClose} color="inherit">
                   Cancel
                 </Button>
-                <Button variant="contained" type="submit">
-                  Save
-                </Button>
+                <LoadingButton
+                  type="submit"
+                  loading={
+                    Object.keys(selectedRow)?.length > 0
+                      ? updateFlashDataLoading
+                      : createFlashDataLoading
+                  }
+                  loadingPosition="start"
+                  variant="contained"
+                >
+                  {updateFlashDataLoading === false && createFlashDataLoading === false && (
+                    <span>Save</span>
+                  )}
+                </LoadingButton>
               </Box>
             </Grid>
           </Grid>

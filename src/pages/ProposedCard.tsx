@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store/store';
 import { useEffect } from 'react';
+import { getAllFlashCardForAdmin } from 'src/store/slices/flashCardSlice';
 import {
   TableEmptyRows,
   TableHeadCustom,
@@ -20,22 +21,25 @@ import {
   emptyRows,
   useTable,
 } from 'src/components/table';
-import UserTableRow from 'src/sections/user/UserTableRow';
-import { clearDeleteUserData, deleteUser, getAllUsers } from 'src/store/slices/userSlice';
-import { useSnackbar } from '../components/snackbar';
+import ProposedCardTableRow from 'src/sections/proposedCard/ProposedCardTableRow';
+import {
+  changeProposedCardStatus,
+  clearStatusData,
+  getAllProposedCard,
+} from 'src/store/slices/proposedCardSlice';
 import { useSettingsContext } from '../components/settings';
+import { useSnackbar } from '../components/snackbar';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
-  { id: 'language', label: 'Language', align: 'left' },
-  { id: 'phone', label: 'Phone', align: 'left' },
+  { id: 'word', label: 'Word', align: 'left' },
+  { id: 'definition', label: 'Definition', align: 'left' },
+  { id: 'phrase', label: 'Phrase', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
 
-export default function Course() {
+export default function ProposedCard() {
   const { enqueueSnackbar } = useSnackbar();
   const {
     page,
@@ -45,57 +49,62 @@ export default function Course() {
     setRowsPerPage,
     setPage,
     selected,
-    onSort,
     onSelectRow,
+    onSort,
   } = useTable();
 
   const { themeStretch } = useSettingsContext();
 
-  const { usersData, usersDataloading, deleteFlashCardSuccess, deleteFlashCardError } = useSelector(
-    (state: RootState) => state.user
-  );
-
+  const {
+    proposedCardData,
+    proposedCardDataLoading,
+    proposedCardStatusError,
+    proposedCardStatusSuccess,
+  } = useSelector((state: RootState) => state.proposedCard);
   const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(getAllUsers(page + 1, rowsPerPage));
+    dispatch(getAllProposedCard(page + 1, rowsPerPage));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, []);
 
   useEffect(() => {
-    if (deleteFlashCardSuccess)
-      enqueueSnackbar('User deleted successfully', { variant: 'success' });
-    if (deleteFlashCardError) enqueueSnackbar('Something went wrong!', { variant: 'error' });
-    dispatch(clearDeleteUserData());
+    if (proposedCardStatusSuccess)
+      enqueueSnackbar('Status changes Suucessfully', { variant: 'success' });
+    if (proposedCardStatusError) enqueueSnackbar('Something went wrong', { variant: 'error' });
+    dispatch(clearStatusData());
     setPage(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deleteFlashCardSuccess, deleteFlashCardError]);
+  }, [proposedCardStatusError, proposedCardStatusSuccess]);
 
-  const isNotFound = usersData?.rows?.length === 0;
-
-  const onDeleteRow = (rowId: number) => {
-    dispatch(deleteUser(rowId));
-  };
+  const isNotFound = proposedCardData?.rows?.length === 0;
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
-    dispatch(getAllUsers(newPage + 1, rowsPerPage));
+    dispatch(getAllFlashCardForAdmin(newPage + 1, rowsPerPage));
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    dispatch(getAllUsers(page + 1, parseInt(event.target.value, 10)));
+    dispatch(getAllFlashCardForAdmin(page + 1, parseInt(event.target.value, 10)));
+  };
+
+  const onStatusChange = (rowId: number, status: string) => {
+    dispatch(
+      changeProposedCardStatus(rowId, {
+        status,
+      })
+    );
   };
 
   return (
     <>
       <Helmet>
-        <title> Users | Perrolingo Admin Panel</title>
+        <title> Proposed card | Perrolingo Admin Panel</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h3" component="h1" paragraph>
-          Users
+          Proposed card
         </Typography>
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -104,41 +113,41 @@ export default function Course() {
               order={order}
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
-              rowCount={usersData?.rows?.length}
+              rowCount={proposedCardData?.rows?.length}
               numSelected={selected.length}
               onSort={onSort}
             />
 
             <TableBody>
-              {usersDataloading
+              {proposedCardDataLoading
                 ? [...Array(rowsPerPage)]
                     ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     ?.map((item, index) => <TableSkeleton count={TABLE_HEAD?.length} />)
-                : usersData?.rows?.map((row: any) => (
-                    <UserTableRow
+                : proposedCardData?.rows?.map((row: any) => (
+                    <ProposedCardTableRow
                       key={row.id}
                       row={row}
                       selected={selected?.includes(row.id)}
                       onSelectRow={() => onSelectRow(row.id)}
                       onEditRow={() => {}}
-                      onDeleteRow={() => {
-                        onDeleteRow(row?.id);
+                      onDeleteRow={() => {}}
+                      onStatusChange={(status: string) => {
+                        onStatusChange(row?.id, status);
                       }}
                     />
                   ))}
 
               <TableEmptyRows
                 height={72}
-                emptyRows={emptyRows(page, rowsPerPage, usersData?.rows?.length)}
+                emptyRows={emptyRows(page, rowsPerPage, proposedCardData?.count)}
               />
-
-              {usersDataloading === false && <TableNoData isNotFound={isNotFound} />}
+              {proposedCardDataLoading === false && <TableNoData isNotFound={isNotFound} />}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           component="div"
-          count={usersData?.count}
+          count={proposedCardData?.count}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}

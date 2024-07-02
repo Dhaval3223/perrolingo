@@ -19,6 +19,7 @@ import {
   PageThree,
   Course,
   User,
+  ProposedCard,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -51,6 +52,7 @@ export default function Router() {
         { path: 'flash-card', element: <FlashCard /> },
         { path: 'course', element: <Course /> },
         { path: 'users', element: <User /> },
+        { path: 'proposed-card', element: <ProposedCard /> },
         { path: 'one', element: <FlashCard /> },
         { path: 'two', element: <PageTwo /> },
         { path: 'three', element: <PageThree /> },
