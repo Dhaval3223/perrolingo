@@ -8,19 +8,7 @@ import DashboardLayout from '../layouts/dashboard';
 // config
 import { PATH_AFTER_LOGIN } from '../config-global';
 //
-import {
-  Page404,
-  FlashCard,
-  PageTwo,
-  PageSix,
-  PageFour,
-  PageFive,
-  LoginPage,
-  PageThree,
-  Course,
-  User,
-  ProposedCard,
-} from './elements';
+import { Page404, FlashCard, LoginPage, Course, User, ProposedCard } from './elements';
 
 // ----------------------------------------------------------------------
 
@@ -53,18 +41,6 @@ export default function Router() {
         { path: 'course', element: <Course /> },
         { path: 'users', element: <User /> },
         { path: 'proposed-card', element: <ProposedCard /> },
-        { path: 'one', element: <FlashCard /> },
-        { path: 'two', element: <PageTwo /> },
-        { path: 'three', element: <PageThree /> },
-        {
-          path: 'user',
-          children: [
-            { element: <Navigate to="/dashboard/user/four" replace />, index: true },
-            { path: 'four', element: <PageFour /> },
-            { path: 'five', element: <PageFive /> },
-            { path: 'six', element: <PageSix /> },
-          ],
-        },
       ],
     },
     {

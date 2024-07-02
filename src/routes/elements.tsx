@@ -19,10 +19,5 @@ export const FlashCard = Loadable(lazy(() => import('../pages/FlashCard')));
 export const Course = Loadable(lazy(() => import('../pages/Course')));
 export const User = Loadable(lazy(() => import('../pages/User')));
 export const ProposedCard = Loadable(lazy(() => import('../pages/ProposedCard')));
-export const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));
-export const PageThree = Loadable(lazy(() => import('../pages/PageThree')));
-export const PageFour = Loadable(lazy(() => import('../pages/PageFour')));
-export const PageFive = Loadable(lazy(() => import('../pages/PageFive')));
-export const PageSix = Loadable(lazy(() => import('../pages/PageSix')));
 
 export const Page404 = Loadable(lazy(() => import('../pages/Page404')));

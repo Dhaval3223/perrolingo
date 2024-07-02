@@ -77,26 +77,6 @@ export function bgGradient(props?: BgGradientProps) {
 
 // ----------------------------------------------------------------------
 
-export function textGradient(value: string) {
-  return {
-    background: `-webkit-linear-gradient(${value})`,
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-  };
-}
-
-// ----------------------------------------------------------------------
-
-export function filterStyles(value: string) {
-  return {
-    filter: value,
-    WebkitFilter: value,
-    MozFilter: value,
-  };
-}
-
-// ----------------------------------------------------------------------
-
 export const hideScrollbarY = {
   msOverflowStyle: 'none',
   scrollbarWidth: 'none',
