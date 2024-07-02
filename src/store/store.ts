@@ -1,10 +1,16 @@
 import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit';
 import flashCardReducer from './slices/flashCardSlice';
+import courseReducer from './slices/courseSlice';
+import userReducer from './slices/userSlice';
+import proposedCardReducer from './slices/proposedCardSlice';
 
 // Configure Redux store with combined reducers
 const store = configureStore({
   reducer: {
-     flashCard: flashCardReducer,
+    flashCard: flashCardReducer,
+    course: courseReducer,
+    user: userReducer,
+    proposedCard: proposedCardReducer,
     // Add more reducers as needed
   },
 });

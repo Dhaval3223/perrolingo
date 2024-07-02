@@ -15,6 +15,9 @@ export const PATH_AUTH = {
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   one: path(ROOTS_DASHBOARD, '/one'),
+  flashCard: path(ROOTS_DASHBOARD, '/flash-card'),
+  course: path(ROOTS_DASHBOARD, '/course'),
+  users: path(ROOTS_DASHBOARD, '/users'),
   two: path(ROOTS_DASHBOARD, '/two'),
   three: path(ROOTS_DASHBOARD, '/three'),
   user: {
