@@ -14,7 +14,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'src/store/store';
 import { useEffect, useState } from 'react';
-import { deleteFlashCardForAdmin, getAllFlashCardForAdmin } from 'src/store/slices/flashCardSlice';
+import Scrollbar from 'src/components/scrollbar/Scrollbar';
 import {
   TableEmptyRows,
   TableHeadCustom,
@@ -23,28 +23,28 @@ import {
   emptyRows,
   useTable,
 } from 'src/components/table';
-import FlashCardTableRow from 'src/sections/flashcard/FlashcardTableRow';
-import CreateFlashCardModel from 'src/sections/flashcard/CreateFlashCardModel';
-import { useSettingsContext } from '../components/settings';
+import { deleteCourse, getAllCourseWithFlashcard } from 'src/store/slices/courseSlice';
+import CourseTableRow from 'src/sections/course/CourseTableRow';
+import CourseModel from 'src/sections/course/CourseModel';
 import { useSnackbar } from '../components/snackbar';
+import { useSettingsContext } from '../components/settings';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'term', label: 'Term', align: 'left' },
-  { id: 'definition', label: 'Definition', align: 'left' },
-  { id: 'phrase', label: 'Phrase', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'level', label: 'Level', align: 'left' },
   { id: 'language', label: 'Language', align: 'left' },
   { id: 'image', label: 'Image', align: 'left' },
-  { id: 'audio', label: 'Audio', align: 'left' },
   { id: 'action', label: 'Action', align: 'left' },
 ];
 
-export default function FlashCard() {
+export default function Course() {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState({});
   const [id, setId] = useState(-1);
   const {
+    dense,
     page,
     order,
     orderBy,
@@ -52,22 +52,23 @@ export default function FlashCard() {
     setRowsPerPage,
     setPage,
     selected,
-    onSelectRow,
     onSort,
+    onSelectRow,
   } = useTable();
 
   const { themeStretch } = useSettingsContext();
 
-  const { flashCardData, flashCardDataloading } = useSelector(
-    (state: RootState) => state.flashCard
+  const { courseWithFlashcardData, courseWithFlashcardDataLoading } = useSelector(
+    (state: RootState) => state.course
   );
+
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllFlashCardForAdmin(page + 1, rowsPerPage));
+    dispatch(getAllCourseWithFlashcard(page + 1, rowsPerPage));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const isNotFound = flashCardData?.rows?.length === 0;
+  const isNotFound = courseWithFlashcardData?.rows?.length === 0;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -84,30 +85,30 @@ export default function FlashCard() {
     handleClickOpen();
   };
   const onDeleteRow = (rowId: number) => {
-    dispatch(deleteFlashCardForAdmin(rowId));
-    enqueueSnackbar('Flashcard deleted successfully');
+    dispatch(deleteCourse(rowId));
+    enqueueSnackbar('Course deleted successfully');
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
-    dispatch(getAllFlashCardForAdmin(newPage + 1, rowsPerPage));
+    dispatch(getAllCourseWithFlashcard(newPage + 1, rowsPerPage));
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    dispatch(getAllFlashCardForAdmin(page + 1, parseInt(event.target.value, 10)));
+    dispatch(getAllCourseWithFlashcard(page + 1, parseInt(event.target.value, 10)));
   };
 
   return (
     <>
       <Helmet>
-        <title> Flash card | Perrolingo Admin Panel</title>
+        <title> Course | Perrolingo Admin Panel</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h3" component="h1" paragraph>
-            Flash card
+            Course
           </Typography>
           <Button
             variant="outlined"
@@ -115,7 +116,7 @@ export default function FlashCard() {
               handleClickOpen();
             }}
           >
-            Add Flash Card
+            Add Course
           </Button>
         </Box>
 
@@ -144,7 +145,7 @@ export default function FlashCard() {
               order={order}
               orderBy={orderBy}
               headLabel={TABLE_HEAD}
-              rowCount={flashCardData?.rows?.length}
+              rowCount={courseWithFlashcardData?.rows?.length}
               numSelected={selected.length}
               onSort={onSort}
               // onSelectAllRows={(checked) =>
@@ -156,13 +157,13 @@ export default function FlashCard() {
             />
 
             <TableBody>
-              {flashCardDataloading
+              {courseWithFlashcardDataLoading
                 ? [...Array(rowsPerPage)]
                     ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     ?.map((item, index) => <TableSkeleton count={TABLE_HEAD?.length} />)
-                : flashCardData?.rows?.map((row: any) => (
+                : courseWithFlashcardData?.rows?.map((row: any) => (
                     <>
-                      <FlashCardTableRow
+                      <CourseTableRow
                         key={row.id}
                         row={row}
                         selected={selected?.includes(row.id)}
@@ -176,22 +177,23 @@ export default function FlashCard() {
                         }}
                       />
                       {id === row?.id && open && (
-                        <CreateFlashCardModel open={open} onClose={() => handleClose()} />
+                        <CourseModel open={open} onClose={() => handleClose()} />
                       )}
                     </>
                   ))}
 
               <TableEmptyRows
                 height={72}
-                emptyRows={emptyRows(page, rowsPerPage, flashCardData?.count)}
+                emptyRows={emptyRows(page, rowsPerPage, courseWithFlashcardData?.rows?.length)}
               />
-              {flashCardDataloading === false && <TableNoData isNotFound={isNotFound} />}
+
+              {courseWithFlashcardDataLoading === false && <TableNoData isNotFound={isNotFound} />}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           component="div"
-          count={flashCardData?.count}
+          count={courseWithFlashcardData?.count}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
@@ -200,7 +202,7 @@ export default function FlashCard() {
         />
       </Container>
       {open && (
-        <CreateFlashCardModel
+        <CourseModel
           open={open}
           editId={id}
           selectedRow={selectedRow}

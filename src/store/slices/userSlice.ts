@@ -2,7 +2,10 @@ import axiosInstance from 'src/utils/axios';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UserState {
-  usersData: any;
+  usersData: {
+    count: number;
+    rows: any;
+  };
   usersDataloading: boolean;
   getUserData: any;
   getUserDataLoading: boolean;
@@ -22,7 +25,10 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  usersData: [],
+  usersData: {
+    count: 0,
+    rows: [],
+  },
   usersDataloading: false,
   getUserData: {},
   getUserDataLoading: false,
@@ -49,7 +55,7 @@ const userSlice = createSlice({
       state.usersDataloading = true;
     },
     getUserData(state, action: PayloadAction<any>) {
-      state.usersDataloading = true;
+      state.usersDataloading = false;
       state.usersData = action.payload;
     },
     stopUserLoading(state) {
@@ -59,7 +65,7 @@ const userSlice = createSlice({
       state.getUserDataLoading = true;
     },
     getUserMyData(state, action: PayloadAction<any>) {
-      state.getUserDataLoading = true;
+      state.getUserDataLoading = false;
       state.getUserData = action.payload;
     },
     stopGetUserLoading(state) {
@@ -142,7 +148,7 @@ export const getAllUsers =
       const response = await axiosInstance.get(
         `/admins/getalluser?page=${page}&pageSize=${pageSize}`
       ); // Replace with your API endpoint
-      dispatch(getUserData(response.data));
+      dispatch(getUserData(response.data.data));
     } catch (error) {
       dispatch(stopUserLoading(error.message));
     }
@@ -193,6 +199,7 @@ export const deleteUser =
       dispatch(deleteUserLoading());
       const response = await axiosInstance.patch(`/admins/deleteuser/${id}`); // Replace with your API endpoint
       dispatch(deleteUserSuccess());
+      dispatch(getAllUsers(1, 5));
     } catch (error) {
       dispatch(deleteUserError());
     }

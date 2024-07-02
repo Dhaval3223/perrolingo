@@ -25,7 +25,7 @@ const ProposedCardSlice = createSlice({
       state.proposedCardDataLoading = true;
     },
     getProposedCardData(state, action: PayloadAction<any>) {
-      state.proposedCardDataLoading = true;
+      state.proposedCardDataLoading = false;
       state.proposedCardData = action.payload;
     },
     stopProposedCardLoading(state) {

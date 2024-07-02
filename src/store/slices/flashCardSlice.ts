@@ -50,7 +50,7 @@ const flashCardSlice = createSlice({
       state.flashCardDataloading = true;
     },
     flashCardData(state, action: PayloadAction<any>) {
-      state.flashCardDataloading = true;
+      state.flashCardDataloading = false;
       state.flashCardData = action.payload;
     },
     stopFlashCardDataLoading(state) {
@@ -115,12 +115,14 @@ export const {
 export default flashCardSlice.reducer;
 
 export const getAllFlashCardForAdmin =
-  (page: number, pageSize: number): any =>
+  (page?: number, pageSize?: number): any =>
   async (dispatch: any) => {
     try {
       dispatch(startFlashCardDataloading());
       const response = await axiosInstance.get(
-        `/flashcard/getallflashcardsforadmin?page=${page}&pageSize=${pageSize}`
+        page && pageSize
+          ? `/flashcard/getallflashcardsforadmin?page=${page}&pageSize=${pageSize}`
+          : `/flashcard/getallflashcardsforadmin`
       ); // Replace with your API endpoint
       dispatch(flashCardData(response.data.data));
     } catch (error) {
@@ -135,7 +137,7 @@ export const createFlashCardForAdmin =
       dispatch(createFlashDataLoading());
       await axiosInstance.post(`/flashcard`, data); // Replace with your API endpoint
       dispatch(createFlashCardDataSuccess());
-      dispatch(getAllFlashCardForAdmin(1, 10));
+      dispatch(getAllFlashCardForAdmin(1, 5));
     } catch (error) {
       dispatch(createFlashCardDataError());
     }
@@ -148,7 +150,7 @@ export const updateFlashCardForAdmin =
       dispatch(updateFlashDataLoading());
       await axiosInstance.patch(`/flashcard/${id}`, data); // Replace with your API endpoint
       dispatch(updateFlashCardDataSuccess());
-      dispatch(getAllFlashCardForAdmin(1, 10));
+      dispatch(getAllFlashCardForAdmin(1, 5));
     } catch (error) {
       dispatch(updateFlashCardDataError());
     }
@@ -161,7 +163,7 @@ export const deleteFlashCardForAdmin =
       dispatch(deleteFlashDataLoading());
       await axiosInstance.patch(`/flashcard/delete/${id}`); // Replace with your API endpoint
       dispatch(deleteFlashCardDataSuccess());
-      dispatch(getAllFlashCardForAdmin(1, 10));
+      dispatch(getAllFlashCardForAdmin(1, 5));
     } catch (error) {
       dispatch(deleteFlashCardDataError());
     }

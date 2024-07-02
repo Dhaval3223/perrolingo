@@ -1,10 +1,17 @@
 import axiosInstance from 'src/utils/axios';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { number } from 'yup';
 
 interface CourseState {
-  courseData: any;
+  courseData: {
+    count: number;
+    rows: any;
+  };
   courseDataloading: boolean;
-  courseWithFlashcardData: any;
+  courseWithFlashcardData: {
+    count: number;
+    rows: any;
+  };
   courseWithFlashcardDataLoading: any;
   fetchCourseData: any;
   fetchCourseDataLoading: boolean;
@@ -22,9 +29,15 @@ interface CourseState {
 }
 
 const initialState: CourseState = {
-  courseData: [],
+  courseData: {
+    count: 0,
+    rows: [],
+  },
   courseDataloading: false,
-  courseWithFlashcardData: [],
+  courseWithFlashcardData: {
+    count: 0,
+    rows: [],
+  },
   courseWithFlashcardDataLoading: false,
   fetchCourseData: {},
   fetchCourseDataError: false,
@@ -49,7 +62,7 @@ const courseSlice = createSlice({
       state.courseDataloading = true;
     },
     getCourseData(state, action: PayloadAction<any>) {
-      state.courseDataloading = true;
+      state.courseDataloading = false;
       state.courseData = action.payload;
     },
     stopCourseLoading(state) {
@@ -142,7 +155,7 @@ export const getAllCourses =
       const response = await axiosInstance.get(
         `/course/admin/course?page=${page}&pageSize=${pageSize}`
       ); // Replace with your API endpoint
-      dispatch(getCourseData(response.data));
+      dispatch(getCourseData(response.data.data));
     } catch (error) {
       dispatch(stopCourseLoading(error.message));
     }
@@ -153,7 +166,7 @@ export const createCourse =
   async (dispatch: any) => {
     try {
       dispatch(createCourseLoading());
-      const response = await axiosInstance.post(`/course`, data, {
+      await axiosInstance.post(`/course`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -169,12 +182,13 @@ export const updateCourse =
   async (dispatch: any) => {
     try {
       dispatch(updateCourseLoading());
-      const response = await axiosInstance.patch(`/course/${id}`, data, {
+      await axiosInstance.patch(`/course/${id}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       }); // Replace with your API endpoint
       dispatch(updateCourseSuccess());
+      dispatch(getAllCourseWithFlashcard(1, 5));
     } catch (error) {
       dispatch(updateCourseError());
     }
@@ -188,7 +202,7 @@ export const getAllCourseWithFlashcard =
       const response = await axiosInstance.get(
         `/course/admin/courseflashcard?page=${page}&pageSize=${pageSize}`
       ); // Replace with your API endpoint
-      dispatch(getCourseWithFlashcardData(response.data));
+      dispatch(getCourseWithFlashcardData(response.data.data));
     } catch (error) {
       dispatch(stopCourseWithFlashcardLoading(error.message));
     }
@@ -211,8 +225,9 @@ export const deleteCourse =
   async (dispatch: any) => {
     try {
       dispatch(deleteCourseLoading());
-      const response = await axiosInstance.patch(`/course/delete/${id}`); // Replace with your API endpoint
+      await axiosInstance.patch(`/course/delete/${id}`); // Replace with your API endpoint
       dispatch(deleteCourseSuccess());
+      dispatch(getAllCourseWithFlashcard(1, 5));
     } catch (error) {
       dispatch(deleteCourseError());
     }

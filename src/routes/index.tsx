@@ -17,6 +17,8 @@ import {
   PageFive,
   LoginPage,
   PageThree,
+  Course,
+  User,
 } from './elements';
 
 // ----------------------------------------------------------------------
@@ -47,6 +49,8 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'flash-card', element: <FlashCard /> },
+        { path: 'course', element: <Course /> },
+        { path: 'users', element: <User /> },
         { path: 'one', element: <FlashCard /> },
         { path: 'two', element: <PageTwo /> },
         { path: 'three', element: <PageThree /> },
