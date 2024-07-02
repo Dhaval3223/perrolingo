@@ -20,7 +20,7 @@ const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'general v1.0.0',
+    subheader: 'general',
     items: [
       { title: 'Flash card', path: PATH_DASHBOARD.flashCard, icon: ICONS.dashboard },
       { title: 'Users', path: PATH_DASHBOARD.users, icon: ICONS.dashboard },
