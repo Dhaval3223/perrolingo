@@ -23,8 +23,8 @@ const navConfig = [
     subheader: 'general v1.0.0',
     items: [
       { title: 'Flash card', path: PATH_DASHBOARD.flashCard, icon: ICONS.dashboard },
-      { title: 'Users', path: PATH_DASHBOARD.one, icon: ICONS.dashboard },
-      { title: 'Course', path: PATH_DASHBOARD.two, icon: ICONS.ecommerce },
+      { title: 'Users', path: PATH_DASHBOARD.users, icon: ICONS.dashboard },
+      { title: 'Course', path: PATH_DASHBOARD.course, icon: ICONS.ecommerce },
       { title: 'Proposed card', path: PATH_DASHBOARD.three, icon: ICONS.analytics },
     ],
   },

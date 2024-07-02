@@ -1,4 +1,5 @@
 // routes
+
 import { ExtendFile } from 'src/components/file-thumbnail/types';
 import { PATH_AUTH } from '../routes/paths';
 // utils

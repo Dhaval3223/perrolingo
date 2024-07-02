@@ -11,13 +11,14 @@ import {
   IconButton,
   Grid,
   Typography,
+  MenuItem,
 } from '@mui/material';
 import FormProvider from 'src/components/hook-form/FormProvider';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { RHFUpload } from 'src/components/hook-form/RHFUpload';
-import { RHFTextField } from 'src/components/hook-form';
+import { RHFSelect, RHFTextField } from 'src/components/hook-form';
 import Iconify from 'src/components/iconify/Iconify';
 import { useDispatch } from 'react-redux';
 import { createFlashCardForAdmin, updateFlashCardForAdmin } from 'src/store/slices/flashCardSlice';
@@ -83,31 +84,66 @@ export default function CreateFlashCardModel({
     defaultValues,
   });
 
-  const { reset, control, setValue, handleSubmit } = methods;
+  const {
+    reset,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { isDirty, dirtyFields },
+  } = methods;
 
   const simpleWordsArr = useFieldArray({
     control,
     name: 'similarWords',
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit: SubmitHandler<any> = (data: any) => {
+    const changedValues = Object.keys(dirtyFields).reduce((acc, key) => {
+      acc[key] = data[key];
+      return acc;
+    }, {} as Partial<any>);
+
     const formData = new FormData();
-    formData.append('term', data.term);
-    formData.append('definition', data.definition);
-    formData.append('phrase', data.phrase);
-    formData.append('language', data.language);
-    formData.append('flashcard_image', data.flashcard_image);
-    formData.append('flashcard_audio', data.flashcard_audio);
-    if (data?.similarWords?.length > 0) {
-      data?.similarWords?.forEach((item: any, index: number) => {
-        // Append each item's data to FormData
-        formData.append(`similarWords[${index}]`, item?.word);
-      });
-    }
     if (Object.keys(selectedRow)?.length > 0) {
+      if (changedValues?.term) {
+        formData.append('term', changedValues.term);
+      }
+      if (changedValues?.definition) {
+        formData.append('definition', changedValues.definition);
+      }
+      if (changedValues?.phrase) {
+        formData.append('phrase', changedValues.phrase);
+      }
+      if (changedValues?.language) {
+        formData.append('language', changedValues.language);
+      }
+      if (changedValues?.flashcard_image) {
+        formData.append('flashcard_image', changedValues.flashcard_image);
+      }
+      if (changedValues?.flashcard_audio) {
+        formData.append('flashcard_audio', changedValues.flashcard_audio);
+      }
+      if (changedValues?.similarWords?.length > 0) {
+        changedValues?.similarWords?.forEach((item: any, index: number) => {
+          // Append each item's data to FormData
+          formData.append(`similarWords[${index}]`, item?.word);
+        });
+      }
       dispatch(updateFlashCardForAdmin(formData, editId));
       enqueueSnackbar('Flashcard updated successfully', { variant: 'success' });
     } else {
+      formData.append('term', data.term);
+      formData.append('definition', data.definition);
+      formData.append('phrase', data.phrase);
+      formData.append('language', data.language);
+      formData.append('flashcard_image', data.flashcard_image);
+      formData.append('flashcard_audio', data.flashcard_audio);
+      if (data?.similarWords?.length > 0) {
+        data?.similarWords?.forEach((item: any, index: number) => {
+          // Append each item's data to FormData
+          formData.append(`similarWords[${index}]`, item?.word);
+        });
+      }
       dispatch(createFlashCardForAdmin(formData));
       enqueueSnackbar('Flashcard created successfully', { variant: 'success' });
     }
@@ -195,7 +231,27 @@ export default function CreateFlashCardModel({
               <RHFTextField name="phrase" label="Enter Phrase" />
             </Grid>
             <Grid item xs={12} md={6}>
-              <RHFTextField name="language" label="Enter Language" />
+              <RHFSelect
+                name="language"
+                label="Select language"
+                sx={{
+                  '& select': {
+                    background: '#fff !important',
+                    color: '#000',
+                    fontWeight: 600,
+                    fontFamily: 'Work Sans,sans-serif',
+                  },
+                }}
+              >
+                <MenuItem disabled value="">
+                  None
+                </MenuItem>
+                <MenuItem value="french">French</MenuItem>
+                <MenuItem value="german">German</MenuItem>
+                <MenuItem value="ltalian">Italian</MenuItem>
+                <MenuItem value="spanish">Spanish</MenuItem>
+                <MenuItem value="english">English</MenuItem>
+              </RHFSelect>
             </Grid>
 
             <Grid item xs={12}>
