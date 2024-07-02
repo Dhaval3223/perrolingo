@@ -1,6 +1,7 @@
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Stack, AppBar, Toolbar, IconButton } from '@mui/material';
+import { Stack, AppBar, Toolbar, IconButton, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import SvgColor from 'src/components/svg-color';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // hooks
@@ -13,11 +14,7 @@ import Logo from '../../../components/logo';
 import Iconify from '../../../components/iconify';
 import { useSettingsContext } from '../../../components/settings';
 //
-import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
-import LanguagePopover from './LanguagePopover';
-import ContactsPopover from './ContactsPopover';
-import NotificationsPopover from './NotificationsPopover';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +25,7 @@ type Props = {
 export default function Header({ onOpenNav }: Props) {
   const theme = useTheme();
 
-  const { themeLayout } = useSettingsContext();
+  const { themeLayout, themeMode, onToggleMode } = useSettingsContext();
 
   const isNavHorizontal = themeLayout === 'horizontal';
 
@@ -37,6 +34,8 @@ export default function Header({ onOpenNav }: Props) {
   const isDesktop = useResponsive('up', 'lg');
 
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
+
+  const OPTIONS = ['light', 'dark'] as const;
 
   const renderContent = (
     <>
@@ -62,6 +61,15 @@ export default function Header({ onOpenNav }: Props) {
         <NotificationsPopover />
 
         <ContactsPopover /> */}
+        <ToggleButtonGroup value={themeMode} exclusive onChange={onToggleMode}>
+          {OPTIONS.map((mode) => (
+            <ToggleButton value={mode}>
+              <SvgColor
+                src={`/assets/icons/setting/${mode === 'light' ? 'ic_sun' : 'ic_moon'}.svg`}
+              />
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
 
         <AccountPopover />
       </Stack>
