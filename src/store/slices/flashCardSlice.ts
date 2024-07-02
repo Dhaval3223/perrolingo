@@ -1,5 +1,6 @@
 import axiosInstance from 'src/utils/axios';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 interface FlashCardState {
   flashCardData: {
     count: number;
@@ -67,6 +68,11 @@ const flashCardSlice = createSlice({
       state.createFlashDataError = true;
       state.createFlashDataLoading = false;
     },
+    clearCreateFlashCardData(state) {
+      state.createFlashDataSuccess = false;
+      state.createFlashDataLoading = false;
+      state.createFlashDataError = false;
+    },
     updateFlashDataLoading(state) {
       state.updateFlashDataLoading = true;
     },
@@ -78,6 +84,11 @@ const flashCardSlice = createSlice({
       state.updateFlashDataError = true;
       state.updateFlashDataLoading = false;
     },
+    clearUpdateFlashCardData(state) {
+      state.updateFlashDataSuccess = false;
+      state.updateFlashDataLoading = false;
+      state.updateFlashDataError = false;
+    },
     deleteFlashDataLoading(state) {
       state.deleteFlashDataLoading = true;
     },
@@ -87,6 +98,11 @@ const flashCardSlice = createSlice({
     },
     deleteFlashCardDataError(state) {
       state.deleteFlashDataError = true;
+      state.deleteFlashDataLoading = false;
+    },
+    clearDeleteFlashCardData(state) {
+      state.deleteFlashDataSuccess = false;
+      state.deleteFlashDataSuccess = false;
       state.deleteFlashDataLoading = false;
     },
     flashCardLikeAndDislikeData(state, action: PayloadAction<any>) {
@@ -110,6 +126,9 @@ export const {
   deleteFlashCardDataSuccess,
   deleteFlashDataLoading,
   flashCardLikeAndDislikeData,
+  clearDeleteFlashCardData,
+  clearUpdateFlashCardData,
+  clearCreateFlashCardData,
 } = flashCardSlice.actions;
 
 export default flashCardSlice.reducer;

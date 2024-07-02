@@ -2,25 +2,12 @@
 /* eslint-disable react/button-has-type */
 import { useState } from 'react';
 // @mui
-import { TableRow, MenuItem, TableCell, IconButton, Tooltip } from '@mui/material';
+import { TableRow, MenuItem, TableCell, IconButton, Tooltip, Button } from '@mui/material';
 import Iconify from 'src/components/iconify/Iconify';
 import MenuPopover from 'src/components/menu-popover/MenuPopover';
+import ConfirmDialog from 'src/components/confirm-dialog/ConfirmDialog';
 
-// @types
-// import { IUserAccountGeneral } from '../../../../@types/user';
-// components
-// import Label from '../../../../components/label';
-// import Iconify from '../../../../components/iconify';
-// import MenuPopover from '../../../../components/menu-popover';
-// import ConfirmDialog from '../../../../components/confirm-dialog';
-
-export default function CourseTableRow({
-  row,
-  selected,
-  onEditRow,
-  onSelectRow,
-  onDeleteRow,
-}: any) {
+export default function CourseTableRow({ row, selected, onEditRow, onDeleteRow }: any) {
   const { name, level, language, image } = row || {};
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState<HTMLElement | null>(null);
@@ -63,15 +50,6 @@ export default function CourseTableRow({
           )}
         </TableCell>
 
-        {/* <TableCell align="left">
-          <Button variant="outlined" onClick={() => {}}>
-            Edit
-          </Button>
-          <Button sx={{ ml: 1 }} variant="outlined" onClick={() => {}}>
-            Delete
-          </Button>
-        </TableCell>
- */}
         <TableCell align="left">
           <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
@@ -96,9 +74,9 @@ export default function CourseTableRow({
         </MenuItem>
         <MenuItem
           onClick={() => {
-            onDeleteRow();
-            // handleOpenConfirm();
-            // handleClosePopover();
+            // onDeleteRow();
+            handleOpenConfirm();
+            handleClosePopover();
           }}
           sx={{ color: 'error.main' }}
         >
@@ -107,7 +85,7 @@ export default function CourseTableRow({
         </MenuItem>
       </MenuPopover>
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
@@ -117,7 +95,7 @@ export default function CourseTableRow({
             Delete
           </Button>
         }
-      /> */}
+      />
     </>
   );
 }

@@ -1,6 +1,5 @@
 import axiosInstance from 'src/utils/axios';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { number } from 'yup';
 
 interface CourseState {
   courseData: {
@@ -99,6 +98,11 @@ const courseSlice = createSlice({
       state.createCourseError = true;
       state.createCourseLoading = false;
     },
+    clearCreateCourseData(state) {
+      state.createCourseSuccess = false;
+      state.createCourseLoading = false;
+      state.createCourseError = false;
+    },
     updateCourseLoading(state) {
       state.updateCourseLoading = true;
     },
@@ -110,6 +114,11 @@ const courseSlice = createSlice({
       state.updateCourseError = true;
       state.updateCourseLoading = false;
     },
+    clearUpdateCourseData(state) {
+      state.updateCourseLoading = false;
+      state.updateCourseError = false;
+      state.updateCourseSuccess = false;
+    },
     deleteCourseLoading(state) {
       state.deleteCourseLoading = true;
     },
@@ -120,6 +129,11 @@ const courseSlice = createSlice({
     deleteCourseError(state) {
       state.deleteCourseError = true;
       state.deleteCourseLoading = false;
+    },
+    clearDeleteCourseData(state) {
+      state.deleteCourseError = false;
+      state.deleteCourseLoading = false;
+      state.deleteCourseSuccess = false;
     },
   },
 });
@@ -143,6 +157,9 @@ export const {
   getCourseByIdData,
   startCourseByIdloading,
   stopCourseByIdLoading,
+  clearCreateCourseData,
+  clearDeleteCourseData,
+  clearUpdateCourseData,
 } = courseSlice.actions;
 
 export default courseSlice.reducer;

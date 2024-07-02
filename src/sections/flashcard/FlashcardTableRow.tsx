@@ -2,38 +2,13 @@
 /* eslint-disable react/button-has-type */
 import { useState } from 'react';
 // @mui
-import {
-  Stack,
-  Avatar,
-  Button,
-  Checkbox,
-  TableRow,
-  MenuItem,
-  TableCell,
-  IconButton,
-  Typography,
-  Tooltip,
-} from '@mui/material';
-import useAudio from 'src/hooks/useAudio';
+import { Button, TableRow, MenuItem, TableCell, IconButton, Tooltip } from '@mui/material';
 import useSound from 'use-sound';
 import Iconify from 'src/components/iconify/Iconify';
 import MenuPopover from 'src/components/menu-popover/MenuPopover';
+import ConfirmDialog from 'src/components/confirm-dialog/ConfirmDialog';
 
-// @types
-// import { IUserAccountGeneral } from '../../../../@types/user';
-// components
-// import Label from '../../../../components/label';
-// import Iconify from '../../../../components/iconify';
-// import MenuPopover from '../../../../components/menu-popover';
-// import ConfirmDialog from '../../../../components/confirm-dialog';
-
-export default function FlashCardTableRow({
-  row,
-  selected,
-  onEditRow,
-  onSelectRow,
-  onDeleteRow,
-}: any) {
+export default function FlashCardTableRow({ row, selected, onEditRow, onDeleteRow }: any) {
   const { term, definition, phrase, language, audio, image } = row || {};
   const [isPlaying, setIsPlaying] = useState(false);
   const [playSound, { stop }] = useSound(audio);
@@ -133,9 +108,9 @@ export default function FlashCardTableRow({
         </MenuItem>
         <MenuItem
           onClick={() => {
-            onDeleteRow();
-            // handleOpenConfirm();
-            // handleClosePopover();
+            // onDeleteRow();
+            handleOpenConfirm();
+            handleClosePopover();
           }}
           sx={{ color: 'error.main' }}
         >
@@ -144,7 +119,7 @@ export default function FlashCardTableRow({
         </MenuItem>
       </MenuPopover>
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
@@ -154,7 +129,7 @@ export default function FlashCardTableRow({
             Delete
           </Button>
         }
-      /> */}
+      />
     </>
   );
 }

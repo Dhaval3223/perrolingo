@@ -1,10 +1,19 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/button-has-type */
-import { TableRow, TableCell, IconButton, Box, Avatar, Typography } from '@mui/material';
+import { TableRow, TableCell, IconButton, Box, Avatar, Typography, Button } from '@mui/material';
+import { useState } from 'react';
+import ConfirmDialog from 'src/components/confirm-dialog/ConfirmDialog';
 import Iconify from 'src/components/iconify/Iconify';
 
 export default function UserTableRow({ row, selected, onDeleteRow }: any) {
-  const { name, profile_image, email, role, language, phone } = row || {};
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
 
   return (
     <>
@@ -33,7 +42,8 @@ export default function UserTableRow({ row, selected, onDeleteRow }: any) {
         <TableCell align="left">
           <IconButton
             onClick={() => {
-              onDeleteRow();
+              // onDeleteRow();
+              handleOpenConfirm();
             }}
             sx={{ color: 'error.main' }}
           >
@@ -42,7 +52,7 @@ export default function UserTableRow({ row, selected, onDeleteRow }: any) {
         </TableCell>
       </TableRow>
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
@@ -52,7 +62,7 @@ export default function UserTableRow({ row, selected, onDeleteRow }: any) {
             Delete
           </Button>
         }
-      /> */}
+      />
     </>
   );
 }

@@ -2,7 +2,10 @@ import axiosInstance from 'src/utils/axios';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ProposedCardState {
-  proposedCardData: any;
+  proposedCardData: {
+    count: number;
+    rows: any;
+  };
   proposedCardDataLoading: boolean;
   proposedCardStatusLoading: boolean;
   proposedCardStatusSuccess: boolean;
@@ -10,7 +13,10 @@ interface ProposedCardState {
 }
 
 const initialState: ProposedCardState = {
-  proposedCardData: [],
+  proposedCardData: {
+    count: 0,
+    rows: [],
+  },
   proposedCardDataLoading: false,
   proposedCardStatusError: false,
   proposedCardStatusLoading: false,
@@ -42,6 +48,11 @@ const ProposedCardSlice = createSlice({
       state.proposedCardStatusLoading = false;
       state.proposedCardStatusError = true;
     },
+    clearStatusData(state) {
+      state.proposedCardStatusError = false;
+      state.proposedCardStatusSuccess = false;
+      state.proposedCardStatusLoading = false;
+    },
   },
 });
 
@@ -52,6 +63,7 @@ export const {
   getProposedCardStatusByIdSuccess,
   startProposedCardStatusByIdloading,
   getProposedCardStatusByIdError,
+  clearStatusData,
 } = ProposedCardSlice.actions;
 
 export default ProposedCardSlice.reducer;
@@ -64,7 +76,7 @@ export const getAllProposedCard =
       const response = await axiosInstance.get(
         `/proposedcard/admin?page=${page}&pageSize=${pageSize}`
       ); // Replace with your API endpoint
-      dispatch(getProposedCardData(response.data));
+      dispatch(getProposedCardData(response.data.data));
     } catch (error) {
       dispatch(stopProposedCardLoading(error.message));
     }
@@ -75,8 +87,9 @@ export const changeProposedCardStatus =
   async (dispatch: any) => {
     try {
       dispatch(startProposedCardStatusByIdloading());
-      const response = await axiosInstance.patch(`/proposedcard/admin/status/${id}`, { data }); // Replace with your API endpoint
+      await axiosInstance.patch(`/proposedcard/admin/status/${id}`, data); // Replace with your API endpoint
       dispatch(getProposedCardStatusByIdSuccess());
+      dispatch(getAllProposedCard(1, 5));
     } catch (error) {
       dispatch(getProposedCardStatusByIdError());
     }

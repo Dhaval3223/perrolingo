@@ -25,7 +25,7 @@ const navConfig = [
       { title: 'Flash card', path: PATH_DASHBOARD.flashCard, icon: ICONS.dashboard },
       { title: 'Users', path: PATH_DASHBOARD.users, icon: ICONS.dashboard },
       { title: 'Course', path: PATH_DASHBOARD.course, icon: ICONS.ecommerce },
-      { title: 'Proposed card', path: PATH_DASHBOARD.three, icon: ICONS.analytics },
+      { title: 'Proposed card', path: PATH_DASHBOARD.proposedCard, icon: ICONS.analytics },
     ],
   },
 
