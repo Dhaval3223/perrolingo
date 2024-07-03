@@ -26,12 +26,14 @@ export default function ProposedCardTableRow({ row, selected, onStatusChange }: 
               fontSize: 16,
               fontWeight: 600,
               textTransform: 'capitalize',
+              /* eslint-disable no-nested-ternary */
               backgroundColor:
                 row?.status === 'Pending'
                   ? 'rgba(255, 171, 0, 0.16)'
                   : row?.status === 'Approved'
                   ? 'rgba(54, 179, 126, 0.16)'
                   : 'rgba(255, 86, 48, 0.16)',
+              /* eslint-disable no-nested-ternary */
               color:
                 row?.status === 'Pending'
                   ? '#B76E00'

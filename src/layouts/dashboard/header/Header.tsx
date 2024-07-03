@@ -35,7 +35,7 @@ export default function Header({ onOpenNav }: Props) {
 
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
 
-  const OPTIONS = ['light', 'dark'] as const;
+  // const OPTIONS = ['light', 'dark'] as const;
 
   const renderContent = (
     <>
@@ -61,7 +61,7 @@ export default function Header({ onOpenNav }: Props) {
         <NotificationsPopover />
 
         <ContactsPopover /> */}
-        <ToggleButtonGroup value={themeMode} exclusive onChange={onToggleMode}>
+        {/*  <ToggleButtonGroup value={themeMode} exclusive onChange={onToggleMode}>
           {OPTIONS.map((mode) => (
             <ToggleButton value={mode}>
               <SvgColor
@@ -69,7 +69,7 @@ export default function Header({ onOpenNav }: Props) {
               />
             </ToggleButton>
           ))}
-        </ToggleButtonGroup>
+        </ToggleButtonGroup> */}
 
         <AccountPopover />
       </Stack>
