@@ -11,9 +11,9 @@ const icon = (name: string) => (
 
 const ICONS = {
   user: icon('ic_user'),
-  ecommerce: icon('ic_ecommerce'),
-  analytics: icon('ic_analytics'),
-  dashboard: icon('ic_dashboard'),
+  flashCard: icon('ic_menu_item'),
+  course: icon('ic_booking'),
+  proposed: icon('ic_file'),
 };
 
 const navConfig = [
@@ -22,30 +22,12 @@ const navConfig = [
   {
     subheader: 'general',
     items: [
-      { title: 'Flash card', path: PATH_DASHBOARD.flashCard, icon: ICONS.dashboard },
-      { title: 'Users', path: PATH_DASHBOARD.users, icon: ICONS.dashboard },
-      { title: 'Course', path: PATH_DASHBOARD.course, icon: ICONS.ecommerce },
-      { title: 'Proposed card', path: PATH_DASHBOARD.proposedCard, icon: ICONS.analytics },
+      { title: 'Flash card', path: PATH_DASHBOARD.flashCard, icon: ICONS.flashCard },
+      { title: 'Users', path: PATH_DASHBOARD.users, icon: ICONS.user },
+      { title: 'Course', path: PATH_DASHBOARD.course, icon: ICONS.course },
+      { title: 'Proposed card', path: PATH_DASHBOARD.proposedCard, icon: ICONS.proposed },
     ],
   },
-
-  // MANAGEMENT
-  // ----------------------------------------------------------------------
-  // {
-  //   subheader: 'management',
-  //   items: [
-  //     {
-  //       title: 'user',
-  //       path: PATH_DASHBOARD.user.root,
-  //       icon: ICONS.user,
-  //       children: [
-  //         { title: 'Four', path: PATH_DASHBOARD.user.four },
-  //         { title: 'Five', path: PATH_DASHBOARD.user.five },
-  //         { title: 'Six', path: PATH_DASHBOARD.user.six },
-  //       ],
-  //     },
-  //   ],
-  // },
 ];
 
 export default navConfig;
