@@ -63,10 +63,14 @@ export default function CreateFlashCardModel({
   onClose,
 }: Props) {
   const dispatch = useDispatch();
-  const { createFlashDataLoading, updateFlashDataLoading } = useSelector(
-    (state: RootState) => state.flashCard
-  );
+  const {
+    createFlashDataLoading,
+    updateFlashDataLoading,
+    createFlashDataSuccess,
+    updateFlashDataSuccess,
+  } = useSelector((state: RootState) => state.flashCard);
   const [url, setUrl] = useState<any>('');
+  const [audioUrl, setAudioUrl] = useState<any>('');
   const defaultValues = {
     term: '',
     definition: '',
@@ -118,11 +122,11 @@ export default function CreateFlashCardModel({
       if (changedValues?.language) {
         formData.append('language', changedValues.language);
       }
-      if (changedValues?.flashcard_image) {
-        formData.append('flashcard_image', changedValues.flashcard_image);
+      if (url?.length > 0) {
+        formData.append('flashcard_image', data.flashcard_image);
       }
-      if (changedValues?.flashcard_audio) {
-        formData.append('flashcard_audio', changedValues.flashcard_audio);
+      if (audioUrl?.length > 0) {
+        formData.append('flashcard_audio', data.flashcard_audio);
       }
       if (changedValues?.similarWords?.length > 0) {
         changedValues?.similarWords?.forEach((item: any, index: number) => {
@@ -146,22 +150,29 @@ export default function CreateFlashCardModel({
       }
       dispatch(createFlashCardForAdmin(formData));
     }
+    if (createFlashDataSuccess || updateFlashDataSuccess) {
+      setUrl('');
+      setAudioUrl('');
+    }
   };
 
   const handleDrop = useCallback(
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
-
       const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
-
-      setUrl(newFile);
+      if (Object.keys(selectedRow)?.length > 0) {
+        setUrl(acceptedFiles);
+      } else {
+        setUrl(newFile);
+      }
 
       if (file) {
         setValue('flashcard_image', file, { shouldValidate: true });
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setValue]
   );
 
@@ -169,14 +180,20 @@ export default function CreateFlashCardModel({
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      Object.assign(file, {
+      const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
 
+      if (Object.keys(selectedRow)?.length > 0) {
+        setAudioUrl(acceptedFiles);
+      } else {
+        setAudioUrl(newFile);
+      }
       if (file) {
         setValue('flashcard_audio', file, { shouldValidate: true });
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setValue]
   );
 
@@ -190,7 +207,6 @@ export default function CreateFlashCardModel({
 
   useEffect(() => {
     if (Object.keys(selectedRow)?.length > 0) {
-      console.log('selectedRow', selectedRow);
       const data = {
         term: selectedRow?.term,
         definition: selectedRow?.definition,
@@ -293,7 +309,6 @@ export default function CreateFlashCardModel({
                   <RHFUpload
                     name="flashcard_image"
                     maxSize={3145728}
-                    files={url}
                     onDrop={handleDrop}
                     onDelete={handleRemoveFile}
                   />

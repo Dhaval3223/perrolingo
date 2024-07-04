@@ -51,9 +51,8 @@ const FormSchema = Yup.object().shape({
 
 export default function CourseModel({ open, selectedRow = {}, editId = -1, onClose }: Props) {
   const { flashCardData } = useSelector((state: RootState) => state.flashCard);
-  const { createCourseLoading, updateCourseLoading } = useSelector(
-    (state: RootState) => state.course
-  );
+  const { createCourseLoading, updateCourseLoading, createCourseSuccess, updateCourseSuccess } =
+    useSelector((state: RootState) => state.course);
   const dispatch = useDispatch();
   const [url, setUrl] = useState<any>('');
   const defaultValues = {
@@ -84,22 +83,22 @@ export default function CourseModel({ open, selectedRow = {}, editId = -1, onClo
     const formData = new FormData();
     if (Object.keys(selectedRow)?.length > 0) {
       if (changedValues?.name) {
-        formData.append('name', data.name);
+        formData.append('name', changedValues.name);
       }
       if (changedValues?.level) {
-        formData.append('level', data.level);
+        formData.append('level', changedValues.level);
       }
       if (changedValues?.language) {
-        formData.append('language', data.language);
+        formData.append('language', changedValues.language);
       }
-      if (changedValues?.course_image) {
+      if (url?.length > 0) {
         formData.append('course_image', data.course_image);
       }
       if (changedValues?.flash_card_array) {
-        formData.append('flash_card_array', JSON.stringify(data?.flash_card_array));
+        formData.append('flash_card_array', JSON.stringify(changedValues?.flash_card_array));
       }
       if (changedValues?.subscription_type) {
-        formData.append('subscription_type', data?.subscription_type);
+        formData.append('subscription_type', changedValues?.subscription_type);
       }
       dispatch(updateCourse(formData, editId));
     } else {
@@ -111,6 +110,9 @@ export default function CourseModel({ open, selectedRow = {}, editId = -1, onClo
       formData.append('subscription_type', data?.subscription_type);
       dispatch(createCourse(formData));
     }
+    if (createCourseSuccess || updateCourseSuccess) {
+      setUrl('');
+    }
   };
 
   const handleDrop = useCallback(
@@ -120,13 +122,17 @@ export default function CourseModel({ open, selectedRow = {}, editId = -1, onClo
       const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
-
-      setUrl(newFile);
+      if (Object.keys(selectedRow)?.length > 0) {
+        setUrl(acceptedFiles);
+      } else {
+        setUrl(newFile);
+      }
 
       if (file) {
         setValue('course_image', file, { shouldValidate: true });
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setValue]
   );
 
@@ -252,7 +258,6 @@ export default function CourseModel({ open, selectedRow = {}, editId = -1, onClo
                   <RHFUpload
                     name="course_image"
                     maxSize={3145728}
-                    files={url}
                     onDrop={handleDrop}
                     onDelete={handleRemoveFile}
                   />
